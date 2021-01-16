@@ -1,6 +1,7 @@
 package com.alinanemykina;
 
 import com.alinanemykina.pages.*;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -21,7 +22,7 @@ public class PinterestTest {
     @BeforeClass
     public static void setup() {
         System.setProperty("webdriver.chrome.driver", ConfProperties.getProperty("chromedriver"));
-        WebDriver driver = new ChromeDriver();
+        driver = new ChromeDriver();
         unauthorizedMainPage = new UnauthorizedMainPage(driver);
         mainPage = new MainPage(driver);
         profilePage = new ProfilePage(driver);
@@ -53,5 +54,12 @@ public class PinterestTest {
         profilePage.clickAllPins();
         pinsPage.clickBoardElement();
         Assert.assertEquals(pinPage.getImageSrc(), imageSrc);
+    }
+
+    @AfterClass
+    public static void tearDown() {
+        pinPage.clickNavbarMenu();
+        pinPage.logout();
+        driver.quit();
     }
 }
