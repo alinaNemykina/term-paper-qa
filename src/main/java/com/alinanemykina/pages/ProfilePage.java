@@ -1,6 +1,7 @@
 package com.alinanemykina.pages;
 
 import com.alinanemykina.page_element.Navbar;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -26,5 +27,10 @@ public class ProfilePage extends Navbar {
 
     public void clickAllPins() {
         allPins.click();
+    }
+
+    public String getBoardTitle(String boardName) {
+        WebElement boardWebElement = driver.findElement(By.xpath("//*[contains(@title, '" + boardName +"')]"));
+        return boardWebElement.getText();
     }
 }

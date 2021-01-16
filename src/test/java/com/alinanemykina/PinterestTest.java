@@ -1,16 +1,16 @@
 package com.alinanemykina;
 
 import com.alinanemykina.pages.*;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.runners.MethodSorters;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import utils.ConfProperties;
 
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class PinterestTest {
     public static WebDriver driver;
     public static UnauthorizedMainPage unauthorizedMainPage;
@@ -33,7 +33,7 @@ public class PinterestTest {
     }
 
     @Test
-    public void loginTest() {
+    public void case1Login() {
         unauthorizedMainPage.clickLoginButton();
         unauthorizedMainPage.inputLogin(ConfProperties.getProperty("login"));
         unauthorizedMainPage.inputPassword(ConfProperties.getProperty("password"));
@@ -44,7 +44,7 @@ public class PinterestTest {
     }
 
     @Test
-    public void addPinTest() {
+    public void case2AddPin() {
         profilePage.clickHomeButton();
         mainPage.clickPinElement();
         pinPage.clickBoardsMenu();
@@ -56,10 +56,25 @@ public class PinterestTest {
         Assert.assertEquals(pinPage.getImageSrc(), imageSrc);
     }
 
+    @Test
+    public void case3MovingPinToANewBoard() throws InterruptedException {
+        pinPage.clickBoardsMenu();
+        String boardName = UUID.randomUUID().toString();
+        pinPage.inputBoardName(boardName);
+        pinPage.clickCreateBoardButton();
+        pinPage.initModalWindow();
+        pinPage.clickSwitchButton();
+        pinPage.clickCreateBoardModalButton();
+        Thread.sleep(5000);
+        pinPage.clickProfileButton();
+        Thread.sleep(5000);
+        Assert.assertEquals(boardName, profilePage.getBoardTitle(boardName));
+    }
+
     @AfterClass
     public static void tearDown() {
-        pinPage.clickNavbarMenu();
-        pinPage.logout();
+        profilePage.clickNavbarMenu();
+        profilePage.logout();
         driver.quit();
     }
 }
