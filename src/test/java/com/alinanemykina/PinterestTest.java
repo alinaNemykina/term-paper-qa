@@ -1,5 +1,6 @@
 package com.alinanemykina;
 
+import com.alinanemykina.pages.*;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -14,6 +15,8 @@ public class PinterestTest {
     public static UnauthorizedMainPage unauthorizedMainPage;
     public static MainPage mainPage;
     public static ProfilePage profilePage;
+    public static PinPage pinPage;
+    public static PinsPage pinsPage;
 
     @BeforeClass
     public static void setup() {
@@ -22,7 +25,9 @@ public class PinterestTest {
         unauthorizedMainPage = new UnauthorizedMainPage(driver);
         mainPage = new MainPage(driver);
         profilePage = new ProfilePage(driver);
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        pinPage = new PinPage(driver);
+        pinsPage = new PinsPage(driver);
+        driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
         driver.get(ConfProperties.getProperty("mainpage"));
     }
 
@@ -35,5 +40,18 @@ public class PinterestTest {
         mainPage.clickProfileButton();
         String username = profilePage.getUsername();
         Assert.assertEquals(ConfProperties.getProperty("username"), username);
+    }
+
+    @Test
+    public void addPinTest() {
+        profilePage.clickHomeButton();
+        mainPage.clickPinElement();
+        pinPage.clickBoardsMenu();
+        pinPage.clickBoardElement();
+        String imageSrc = pinPage.getImageSrc();
+        pinPage.clickProfileButton();
+        profilePage.clickAllPins();
+        pinsPage.clickBoardElement();
+        Assert.assertEquals(pinPage.getImageSrc(), imageSrc);
     }
 }
